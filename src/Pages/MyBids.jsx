@@ -1,24 +1,44 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Provider/AuthContext";
 import Swal from "sweetalert2";
-import { data } from "react-router";
 
 const MyBids = () => {
-  const { user } = use(AuthContext);
-  const [bids, setBits] = useState([]);
+  const { user } = useContext(AuthContext);
+  console.log(user);
+  const [bids, setBids] = useState([]);
 
   useEffect(() => {
     if (user?.email) {
-      fetch(`http://localhost:3000/bids?email=${user.email}`)
+      fetch(`http://localhost:3000/bids?email=${user.email}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-          setBits(data);
+          setBids(data);
         });
     }
-  }, [user?.email]);
+  }, [user]);
 
-  const haldleDeleteBid = (_id) => {
+
+  // useEffect(() => {
+  //   if (user?.email) {
+  //     fetch(`http://localhost:3000/bids?email=${user.email}`, {
+  //       headers: {
+  //         authorization: `Bearer ${user.accessToken}`,
+  //       },
+  //     })
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         console.log(data);
+  //         setBids(data);
+  //       });
+  //   }
+  // }, [user]);
+
+  const handleDeleteBid = (_id) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -34,16 +54,14 @@ const MyBids = () => {
         })
           .then((res) => res.json())
           .then((data) => {
-            console.log("after delete", data);
             if (data.deletedCount) {
               Swal.fire({
                 title: "Deleted!",
                 text: "Your Bid has been deleted.",
                 icon: "success",
               });
-            //   
-            const reaminingBids = bids.filter(bid =>bid._id !== _id);
-            setBits(reaminingBids)
+              const remainingBids = bids.filter((bid) => bid._id !== _id);
+              setBids(remainingBids);
             }
           });
       }
@@ -57,7 +75,6 @@ const MyBids = () => {
       </h3>
       <div className="overflow-x-auto">
         <table className="table">
-          {/* head */}
           <thead>
             <tr>
               <th>SL No.</th>
@@ -69,7 +86,6 @@ const MyBids = () => {
             </tr>
           </thead>
           <tbody>
-            {/* row 1 */}
             {bids.map((bid, index) => (
               <tr key={bid._id}>
                 <th>{index + 1}</th>
@@ -97,7 +113,7 @@ const MyBids = () => {
                 </td>
                 <th>
                   <button
-                    onClick={() => haldleDeleteBid(bid._id)}
+                    onClick={() => handleDeleteBid(bid._id)}
                     className="btn btn-outline btn-error"
                   >
                     Remove Bid
