@@ -4,44 +4,42 @@ import { AuthContext } from "../../Provider/AuthContext";
 import { toast } from "react-toastify";
 
 const Login = () => {
-  
-  const {signInWithGoogle}=useContext(AuthContext);
-  const navigate = useNavigate()
-  
+  const { signInWithGoogle } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const location = useLocation();
   // console.log(location);
-  
-      const handleGoogleSignIn=()=>{
-          signInWithGoogle()
-          .then(result=>{
-              console.log(result.user);
-              navigate(location?.state ? location.state : "/");
-              toast.success("Login Successfully💫")
-              const newUser = {
-                name: result.user.displayName,
-                email: result.user.email,
-                image: result.user.photoURL
-              }
-  
-              // create user in the database
-              fetch('http://localhost:3000/users', {
-                method: 'POST',
-                headers: {
-                  'content-type': 'application/json'
-                },
-                body: JSON.stringify(newUser)
-              })
-              .then(res=>res.json())
-              .then(data=>{
-                console.log("data after user save", data);
-              })
-  
-          })
-          .catch(error=>{
-              console.log(error.message);
-              toast.error(error.message);
-          })
-      }
+
+  const handleGoogleSignIn = () => {
+    signInWithGoogle()
+      .then((result) => {
+        console.log(result.user);
+        navigate(location?.state ? location.state : "/");
+        toast.success("Login Successfully💫");
+        const newUser = {
+          name: result.user.displayName,
+          email: result.user.email,
+          image: result.user.photoURL,
+        };
+
+        // create user in the database
+        fetch("https://smart-deals-api-server-mocha.vercel.app/users", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(newUser),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("data after user save", data);
+          });
+      })
+      .catch((error) => {
+        console.log(error.message);
+        toast.error(error.message);
+      });
+  };
 
   return (
     <div>
@@ -61,7 +59,10 @@ const Login = () => {
             </fieldset>
           </form>
           {/* Google */}
-          <button onClick={handleGoogleSignIn} className="btn bg-white text-black border-[#e5e5e5]">
+          <button
+            onClick={handleGoogleSignIn}
+            className="btn bg-white text-black border-[#e5e5e5]"
+          >
             <svg
               aria-label="Google logo"
               width="16"

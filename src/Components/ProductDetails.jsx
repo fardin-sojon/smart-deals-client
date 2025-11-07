@@ -15,7 +15,7 @@ const ProductDetails = () => {
   const bidModelRef = useRef(null);
 
   useEffect(() => {
-    fetch("http://localhost:3000/products")
+    fetch("https://smart-deals-api-server-mocha.vercel.app/products")
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
@@ -40,11 +40,14 @@ const ProductDetails = () => {
   } = productData || {};
 
   useEffect(() => {
-    fetch(`http://localhost:3000/products/bids/${ProductId}`, {
-      headers: {
-        authorization: `Bearer ${user.accessToken}`
+    fetch(
+      `https://smart-deals-api-server-mocha.vercel.app/products/bids/${ProductId}`,
+      {
+        headers: {
+          authorization: `Bearer ${user.accessToken}`,
+        },
       }
-    })
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log("bids for product", data);
@@ -75,7 +78,7 @@ const ProductDetails = () => {
       status: "pending",
     };
 
-    fetch("http://localhost:3000/bids", {
+    fetch("https://smart-deals-api-server-mocha.vercel.app/bids", {
       method: "POST",
       headers: {
         "content-type": "application/json",

@@ -54,7 +54,10 @@ const router = createBrowserRouter([
       },
       {
         path: "/product-details/:id",
-        loader: ({params})=>fetch(`http://localhost:3000/products/${params.id}`),
+        loader: ({ params }) =>
+          fetch(
+            `https://smart-deals-api-server-mocha.vercel.app/products/${params.id}`
+          ),
         element: (
           <PrivateProvider>
             <ProductDetails />

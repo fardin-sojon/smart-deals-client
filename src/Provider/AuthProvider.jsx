@@ -46,24 +46,23 @@ const AuthProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       console.log("current user", currentUser);
-      if(currentUser){
-        const loggedUser = {email: currentUser.email}
+      if (currentUser) {
+        const loggedUser = { email: currentUser.email };
 
-        fetch('http://localhost:3000/getToken', {
-          method: 'POST',
+        fetch("https://smart-deals-api-server-mocha.vercel.app/getToken", {
+          method: "POST",
           headers: {
-            'content-type' : "application/json"
+            "content-type": "application/json",
           },
-          body: JSON.stringify(loggedUser)
+          body: JSON.stringify(loggedUser),
         })
-        .then(res=>res.json())
-        .then(data=>{
-          console.log('after getting token', data);
-          localStorage.setItem('token', data.token)
-        })
-      }
-      else{
-        localStorage.removeItem('token')
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("after getting token", data);
+            localStorage.setItem("token", data.token);
+          });
+      } else {
+        localStorage.removeItem("token");
       }
       setLoading(false);
     });
@@ -82,14 +81,11 @@ const AuthProvider = ({ children }) => {
   };
 
   if (loading) {
-  return <Loading></Loading>
-}
-
+    return <Loading></Loading>;
+  }
 
   return (
-    <AuthContext.Provider value={authInfo}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
   );
 };
 

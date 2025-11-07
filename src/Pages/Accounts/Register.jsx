@@ -4,7 +4,6 @@ import { AuthContext } from "../../Provider/AuthContext";
 import { toast } from "react-toastify";
 
 const Register = () => {
-
   const { signInWithGoogle } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -23,7 +22,7 @@ const Register = () => {
         };
 
         // create user in the database
-        fetch("http://localhost:3000/users", {
+        fetch("https://smart-deals-api-server-mocha.vercel.app/users", {
           method: "POST",
           headers: {
             "content-type": "application/json",
